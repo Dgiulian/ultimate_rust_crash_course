@@ -1,6 +1,11 @@
 // Silence some warnings so they don't distract from the exercise.
 #![allow(unused_variables)]
 
+mod math;
+
+use math::area_of;
+use math::volume;
+
 fn main() {
     let width = 4;
     let height = 7;
@@ -11,8 +16,8 @@ fn main() {
     // doing `cargo run` should succeed and print something out.
     {
         let area = area_of(width, height);
+        println!("Area is {}", area);
     }
-    println!("Area is {}", area);
 
     // 2. The area that was calculated is not correct! Go fix the area_of() function below, then run
     //    the code again and make sure it worked (you should get an area of 28).
@@ -25,16 +30,5 @@ fn main() {
     //
     // If you get stuck, remember that this is *very* similar to what `area_of` does.
     //
-    //println!("Volume is {}", volume(width, height, depth));
-}
-
-fn area_of(x: i32, y: i32) -> i32 {
-    // 2a. Fix this function to correctly compute the area of a rectangle given
-    // dimensions x and y by multiplying x and y and returning the result.
-    //
-    return 0;
-    // Challenge: It isn't idiomatic (the normal way a Rust programmer would do things) to use
-    //            `return` on the last line of a function. Change the last line to be a
-    //            "tail expression" that returns a value without using `return`.
-    //            Hint: `cargo clippy` will warn you about this exact thing.
+    println!("Volume is {}", volume(width, height, depth));
 }

@@ -5,7 +5,8 @@ use crossterm::{
     ExecutableCommand,
 };
 use invaders::{
-    frame::{self, new_frame /* Drawable, Frame */},
+    frame::{self, new_frame, Drawable /* Drawable, Frame */},
+    player::Player,
     render,
 };
 
@@ -53,10 +54,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     });
 
+    // Player
+    let mut player = Player::new();
+
     // Game Loop
     'gameloop: loop {
         // Per-frame init
-        let curr_frame = new_frame();
+        let mut curr_frame = new_frame();
 
         // Input
         while event::poll(Duration::default())? {
@@ -66,10 +70,15 @@ fn main() -> Result<(), Box<dyn Error>> {
                         audio.play("lose");
                         break 'gameloop;
                     }
+                    KeyCode::Left => player.move_left(),
+                    KeyCode::Right => player.move_right(),
                     _ => {}
                 }
             }
         }
+
+        player.draw(&mut curr_frame);
+
         // Draw and Render
         let _ = render_tx.send(curr_frame); // Ignoring the error
 

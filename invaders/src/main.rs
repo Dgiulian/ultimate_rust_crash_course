@@ -92,8 +92,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         if invaders.update(delta) {
             audio.play("move");
         }
+        if player.detect_hits(&mut invaders) {
+            audio.play("explode");
+        }
 
-        //
+        // We could call the draw
         // player.draw(&mut curr_frame);
         // invaders.draw(&mut curr_frame);
         let drawables: Vec<&dyn Drawable> = vec![&player, &invaders];
@@ -105,6 +108,16 @@ fn main() -> Result<(), Box<dyn Error>> {
         let _ = render_tx.send(curr_frame); // Ignoring the error
 
         thread::sleep(Duration::from_millis(1)); // Prevent generating thoutands of frames per seconds
+
+        // Win or Loose
+        if invaders.all_killed() {
+            audio.play("win");
+            break 'gameloop;
+        }
+        if invaders.reached_bottom() {
+            audio.play("lose");
+            break 'gameloop;
+        }
     }
 
     // Cleanup

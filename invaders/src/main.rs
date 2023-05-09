@@ -6,6 +6,7 @@ use crossterm::{
 };
 use invaders::{
     frame::{self, new_frame, Drawable /* Drawable, Frame */},
+    invaders::Invaders,
     player::Player,
     render,
 };
@@ -57,6 +58,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     // Player
     let mut player = Player::new();
     let mut instant = Instant::now();
+    let mut invaders = Invaders::new();
 
     // Game Loop
     'gameloop: loop {
@@ -87,8 +89,17 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
         // Updates
         player.update(delta);
+        if invaders.update(delta) {
+            audio.play("move");
+        }
 
-        player.draw(&mut curr_frame);
+        //
+        // player.draw(&mut curr_frame);
+        // invaders.draw(&mut curr_frame);
+        let drawables: Vec<&dyn Drawable> = vec![&player, &invaders];
+        for drawable in drawables {
+            drawable.draw(&mut curr_frame)
+        }
 
         // Draw and Render
         let _ = render_tx.send(curr_frame); // Ignoring the error
